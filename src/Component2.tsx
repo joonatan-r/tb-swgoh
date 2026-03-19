@@ -24,6 +24,7 @@ function Component2() {
     const [loading, setLoading] = useState(false);
     const [content, setContent] = useState<string>();
     const [rosters, setRosters] = useState<any[]>([]);
+    const [result, setResult] = useState<any[]>();
 
     const update = () => {
         setLoading(true);
@@ -48,9 +49,11 @@ function Component2() {
             });
     };
 
+    // TODO: select planets + maybe operations to consider, list total of unit required across those
+
     const check = async () => {
         const data = await api.invoke('get-data');
-        // data[planet][operation][name].total
+        const tableRows = [];
         for (const planet of Object.keys(data)) {
             for (const operation of Object.keys(data[planet])) {
                 for (const name of Object.keys(data[planet][operation])) {
@@ -62,10 +65,19 @@ function Component2() {
                                     || r.ships.some((s: any) => s === name)
                             ))
                             .map(r => r.player);
+                    const owned = data[planet][operation][name].owned;
+                    tableRows.push({
+                        planet,
+                        operation,
+                        name,
+                        total: data[planet][operation][name].total,
+                        owned: `${owned.length} ${owned.length ? `(${owned.join(', ')})` : ''}`
+                    });
                 }
             }
         }
         console.log(data);
+        setResult(tableRows);
         // setContent(JSON.stringify(data, null, 2));
     };
 
@@ -74,7 +86,30 @@ function Component2() {
             {loading && (<p>Loading...</p>)}
             <button onClick={update}>Update</button>
             <button onClick={check}>Check</button>
-            {/* <span>{content}</span> */}
+            {result && (
+                <table style={{ margin: 10 }}>
+                    <thead>
+                        <tr>
+                            <th>Planet</th>
+                            <th>Operation</th>
+                            <th>Unit</th>
+                            <th>Needed</th>
+                            <th>Owned</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {result.map(r => (
+                            <tr>
+                                <td>{r.planet}</td>
+                                <td>{r.operation}</td>
+                                <td>{r.name}</td>
+                                <td>{r.total}</td>
+                                <td>{r.owned}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 }
