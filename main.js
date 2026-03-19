@@ -87,11 +87,34 @@ ipcMain.handle('get-7-start-ships', async (event, url) => {
   return await fetch('https://swgoh.gg' + url).then(r => r.text()).then(get7StarShips);
 });
 
+const csvData = fs.readFileSync('data/rote.tsv', { encoding: 'utf-8' });
+const data = {};
 
+for (const csvRow of csvData.split('\r\n').slice(1)) {
+  const cells = csvRow.split('\t');
+  const planet = cells[2];
+  const operation = cells[3];
+  // const row = cells[4];
+  // const slot = cells[5];
+  const name = cells[6];
+  if (!data[planet]) {
+    data[planet] = {};
+  }
+  if (!data[planet][operation]) {
+    data[planet][operation] = {};
+  }
+  if (!data[planet][operation][name]) {
+    data[planet][operation][name] = {};
+  }
+  if (!data[planet][operation][name].total) {
+    data[planet][operation][name].total = 0;
+  }
+  data[planet][operation][name].total++;
+}
 
-
-
-
+ipcMain.handle('get-data', async (event) => {
+  return data;
+});
 
 ipcMain.handle('get-players', async (event, url) => {
   return await getPlayersAndGps(url);

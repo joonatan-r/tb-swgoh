@@ -21,7 +21,8 @@ const channels =
         "write-config",
         "get-player-urls-and-names",
         "get-relic-characters",
-        "get-7-start-ships"
+        "get-7-start-ships",
+        "get-data"
     ];
 const events = ["guild-found", "guild-search-end"];
 const callBacksForEvent = {};
