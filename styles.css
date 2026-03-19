@@ -1,0 +1,31 @@
+
+body {
+    background-color: gray;
+}
+
+.path1:hover {
+    stroke: white;
+    cursor: pointer;
+    fill: white;
+    transition: 0.4s;
+}
+
+td {
+    padding: 8px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+tr.last-fav-guild {
+    border-bottom: 1px solid black;
+}
+
+tr.last-fav-guild > td {
+    padding-bottom: 20px;
+}
+
+tr.first-non-fav-guild > td {
+    padding-top: 20px;
+}
