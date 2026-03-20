@@ -14,11 +14,6 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 const channels =
     [
-        "get-players",
-        "get-guild-page",
-        "guild-search-stop",
-        "get-config",
-        "write-config",
         "get-player-urls-and-names",
         "get-relic-characters",
         "get-7-start-ships",

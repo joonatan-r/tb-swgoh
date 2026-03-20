@@ -86,7 +86,7 @@ function Component2() {
 
     const update = () => {
         setLoading(true);
-        api.invoke('get-player-urls-and-names', '/g/EEpS_QXuQ_ich2gMobNTTA/').then(async (urlsAndNames: any) => {
+        api.invoke('get-player-urls-and-names').then(async (urlsAndNames: any) => {
                 const relicsAnd7StarShips = [];
                 for (const player of urlsAndNames) {
                     console.log(player);
@@ -139,7 +139,7 @@ function Component2() {
     };
 
     return (
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', marginBottom: 300 }}>
             <button onClick={update} disabled={loading} style={{ margin: 8 }}>Fetch data</button>
             <button onClick={check} disabled={loading} style={{ margin: 8 }}>Calculate</button>
             {loading && (<span>Loading...</span>)}
@@ -191,7 +191,7 @@ function Component2() {
                 </tbody>
             </table>
             {result && (
-                <table style={{ margin: 10 }} id="resultTable">
+                <table id="resultTable">
                     <thead>
                         <tr>
                             <th>Planet</th>
@@ -204,7 +204,13 @@ function Component2() {
                     </thead>
                     <tbody>
                         {result.map((r, i) => (operations[r.planet]?.[r.operation]) && (
-                            <tr className={ r.planet !== result[i - 1]?.planet ? 'firstRow' : '' }>
+                            <tr
+                                className={
+                                    r.planet !== result[i - 1]?.planet
+                                        ? 'firstRowPlanet'
+                                        : r.operation !== result[i - 1]?.operation ? 'firstRowOp' : ''
+                                }
+                            >
                                 <td>{r.planet}</td>
                                 <td>{r.operation}</td>
                                 <td>{r.name}</td>

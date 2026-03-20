@@ -3,9 +3,6 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { decode } = require('html-entities');
 const path = require('node:path');
 const fs = require('fs');
-const getPlayersAndGps = require('./get-players');
-const getGuildPage = require('./guild-page-finder');
-const configFile = path.join(__dirname, 'config.txt')
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -19,7 +16,7 @@ const createWindow = () => {
     win.maximize();
     win.show();
     win.loadFile('client/index.html');
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
@@ -75,8 +72,16 @@ function get7StarShips(playerShipsContent) {
     return names;
 }
 
-ipcMain.handle('get-player-urls-and-names', async (event, url) => {
-  return await fetch('https://swgoh.gg' + url).then(r => r.text()).then(getPlayerUrlsAndNames);
+let config;
+
+try {
+  config = JSON.parse(fs.readFileSync('data/config.json', { encoding: 'utf-8' }));
+} catch (e) {
+  console.error(e);
+}
+
+ipcMain.handle('get-player-urls-and-names', async () => {
+  return await fetch('https://swgoh.gg' + config?.guildUrl).then(r => r.text()).then(getPlayerUrlsAndNames);
 });
 
 ipcMain.handle('get-relic-characters', async (event, url) => {
@@ -114,49 +119,4 @@ for (const csvRow of csvData.split('\r\n').slice(1)) {
 
 ipcMain.handle('get-data', async (event) => {
   return data;
-});
-
-ipcMain.handle('get-players', async (event, url) => {
-  return await getPlayersAndGps(url);
-});
-
-let guildSearchRunning = false;
-let shouldStopGuildSearch = false;
-
-ipcMain.handle('get-guild-page', async (event, searchStr) => {
-  let idx = 1;
-  let found = false;
-  let info = undefined;
-  
-  while (/* !found && */ idx < 420) {
-      guildSearchRunning = true;
-      [found, info] = await getGuildPage(idx++, searchStr);
-      if (shouldStopGuildSearch) {
-        shouldStopGuildSearch = false;
-        break;
-      }
-      if (info) event.sender.send('guild-found', info);
-  }
-  guildSearchRunning = false;
-  event.sender.send('guild-search-end');
-});
-
-ipcMain.handle('guild-search-stop', () => {
-  if (guildSearchRunning) {
-    shouldStopGuildSearch = true;
-  }
-});
-
-ipcMain.handle('get-config', () => {
-  try {
-    return JSON.parse(fs.readFileSync(configFile, { encoding: 'utf-8' })?.trim());
-  } catch (e) {
-    return null;
-  }
-});
-
-ipcMain.handle('write-config', (event, config) => {
-  try {
-    fs.writeFileSync(configFile, JSON.stringify(config), { encoding: 'utf-8' });
-  } catch (e) {}
 });

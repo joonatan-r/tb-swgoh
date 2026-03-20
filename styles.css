@@ -6,20 +6,19 @@ body {
 
 #checkboxTable {
     border-top: 1px solid black;
-    border-bottom: 1px solid black;
     padding: 8px;
+    margin: 0;
+}
+
+#resultTable {
+    border-top: 1px solid black;
+    padding: 8px;
+    margin: 10px 0 0 0;
 }
 
 #checkboxTable tr, th, td, thead, tbody {
     margin: 0;
     padding: 0;
-}
-
-.path1:hover {
-    stroke: white;
-    cursor: pointer;
-    fill: white;
-    transition: 0.4s;
 }
 
 #resultTable td {
@@ -32,22 +31,14 @@ body {
     padding-right: 8px;
 }
 
-#resultTable .firstRow {
+.firstRowPlanet {
     border-top: 1px solid black;
+}
+
+.firstRowOp {
+    border-top: 1px dashed black;
 }
 
 table {
     border-collapse: collapse;
-}
-
-tr.last-fav-guild {
-    border-bottom: 1px solid black;
-}
-
-tr.last-fav-guild > td {
-    padding-bottom: 20px;
-}
-
-tr.first-non-fav-guild > td {
-    padding-top: 20px;
 }
