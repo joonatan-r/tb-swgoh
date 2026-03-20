@@ -1,6 +1,18 @@
 
 body {
-    background-color: gray;
+    background-color: white;
+    font-family: Calibri;
+}
+
+#checkboxTable {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 8px;
+}
+
+#checkboxTable tr, th, td, thead, tbody {
+    margin: 0;
+    padding: 0;
 }
 
 .path1:hover {
@@ -10,8 +22,13 @@ body {
     transition: 0.4s;
 }
 
-td {
+#resultTable td {
+    margin-top: 10px;
     padding: 8px;
+}
+
+#resultTable .firstRow {
+    border-top: 1px solid black;
 }
 
 table {

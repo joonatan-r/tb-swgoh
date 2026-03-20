@@ -20,11 +20,51 @@ const getRelicForPlanet = (planet: string) => {
     }
 };
 
+const operationsBase = {
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false
+};
+
+const operationsAll = {
+    1: true,
+    2: true,
+    3: true,
+    4: true,
+    5: true,
+    6: true
+};
+
 function Component2() {
     const [loading, setLoading] = useState(false);
-    const [content, setContent] = useState<string>();
     const [rosters, setRosters] = useState<any[]>([]);
     const [result, setResult] = useState<any[]>();
+    const [operations, setOperations] = useState<any>({
+        Mustafar: { ...operationsBase },
+        Corellia: { ...operationsBase },
+        Coruscant: { ...operationsBase },
+        Geonosis: { ...operationsBase },
+        Felucia: { ...operationsBase },
+        Bracca: { ...operationsBase },
+        Dathomir: { ...operationsBase },
+        Tatooine: { ...operationsBase },
+        Zeffo: { ...operationsBase },
+        Kashyyk: { ...operationsBase },
+        'Haven-class Medical Station': { ...operationsBase },
+        Mandalore: { ...operationsBase },
+        Kessel: { ...operationsBase },
+        Lothal: { ...operationsBase },
+        Malachor: { ...operationsBase },
+        Vandor: { ...operationsBase },
+        'Ring of Kafrene': { ...operationsBase },
+        'Death Star': { ...operationsBase },
+        Hoth: { ...operationsBase },
+        Scarif: { ...operationsBase },
+    });
+    const [tooltip, setTooltip] = useState<any>();
 
     const update = () => {
         setLoading(true);
@@ -71,23 +111,70 @@ function Component2() {
                         operation,
                         name,
                         total: data[planet][operation][name].total,
-                        owned: `${owned.length} ${owned.length ? `(${owned.join(', ')})` : ''}`
+                        owned: `${owned.length}`,
+                        owningPlayers: `${owned.length ? `(${owned.join(', ')})` : ''}`
                     });
                 }
             }
         }
         console.log(data);
         setResult(tableRows);
-        // setContent(JSON.stringify(data, null, 2));
     };
 
     return (
-        <div>
-            {loading && (<p>Loading...</p>)}
-            <button onClick={update}>Update</button>
-            <button onClick={check}>Check</button>
+        <div style={{ position: 'relative' }}>
+            <button onClick={update} disabled={loading} style={{ margin: 8 }}>Fetch data</button>
+            <button onClick={check} disabled={loading} style={{ margin: 8 }}>Calculate</button>
+            {loading && (<span>Loading...</span>)}
+            <table id="checkboxTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>All</th>
+                        {Object.keys((Object.values(operations)[0] as any)).map(o => (
+                            <th>{o}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {Object.keys(operations).map(planet => (
+                        <tr>
+                            <td>{planet}</td>
+                            <td>
+                                <input
+                                    type='checkbox'
+                                    checked={Object.values(operations[planet]).every(v => v)}
+                                    onChange={() => setOperations({
+                                        ...operations,
+                                        [planet]: Object.values(operations[planet]).every(v => v)
+                                            ? { ...operationsBase }
+                                            : { ...operationsAll }
+                                    })}
+                                >
+                                </input>
+                            </td>
+                            {Object.keys(operations[planet]).map(o => (
+                                <td>
+                                    <input
+                                        type='checkbox'
+                                        checked={operations[planet][o]}
+                                        onChange={() => setOperations({
+                                            ...operations,
+                                            [planet]: {
+                                                ...(operations[planet]),
+                                                [o]: !operations[planet][o]
+                                            }
+                                        })}
+                                    >
+                                    </input>
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
             {result && (
-                <table style={{ margin: 10 }}>
+                <table style={{ margin: 10 }} id="resultTable">
                     <thead>
                         <tr>
                             <th>Planet</th>
@@ -98,17 +185,40 @@ function Component2() {
                         </tr>
                     </thead>
                     <tbody>
-                        {result.map(r => (
-                            <tr>
+                        {result.map((r, i) => (
+                            <tr className={ r.planet !== result[i - 1]?.planet ? 'firstRow' : '' }>
                                 <td>{r.planet}</td>
                                 <td>{r.operation}</td>
                                 <td>{r.name}</td>
                                 <td>{r.total}</td>
-                                <td>{r.owned}</td>
+                                <td
+                                    style={{ cursor: 'pointer' }}
+                                    onMouseEnter={e => setTooltip({
+                                        x: e.pageX,
+                                        y: e.pageY,
+                                        content: r.owningPlayers
+                                    })}
+                                    onMouseLeave={() => setTooltip(undefined)}
+                                >
+                                    {r.owned}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            )}
+            {tooltip && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        background: 'white',
+                        margin: 10,
+                        top: `${tooltip.y + 10}px`,
+                        left: `${tooltip.x + 10}px`
+                    }}
+                >
+                    <p>{tooltip.content}</p>
+                </div>
             )}
         </div>
     );
