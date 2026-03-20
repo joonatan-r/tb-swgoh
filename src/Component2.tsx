@@ -83,6 +83,7 @@ function Component2() {
         Scarif: { ...operationsBase },
     });
     const [tooltip, setTooltip] = useState<any>();
+    const [report, setReport] = useState<any>();
 
     const update = () => {
         setLoading(true);
@@ -138,6 +139,118 @@ function Component2() {
         setResult(tableRows);
     };
 
+    useEffect(() => {
+        setReport(getUpdatedReport());
+    }, [result]);
+
+    const formatReportObject = (obj: any) => {
+        return Object.keys(obj).map(key => `${key} (${obj[key].join(', ')})`).join(',\n') + '\n';
+    };
+
+    const getUpdatedReport = (): any => {
+        if (!result?.length) {
+            return undefined;
+        }
+        const notPossible = {} as any;
+        const notAllPossible = {} as any;
+        const notAllPossibleAutoRemoved = {} as any;
+        const exactlyPossibleOneOp = {} as any;
+        const exactlyPossibleSeveralOps = {} as any;
+        const exactlyPossibleSeveralOpsAutoRemoved = {} as any;
+        const notPossibleOps = [] as any[];
+        const resultCopy = JSON.parse(JSON.stringify(result)) as any[]; // lazy way to copy
+        for (const row of result) {
+            if (!operations[row.planet][row.operation]) {
+                continue;
+            }
+            if (Number(row.owned) < Number(row.total)) {
+                if (!notPossible[`${row.planet} ${row.operation}`]) {
+                    notPossible[`${row.planet} ${row.operation}`] = [];
+                }
+                notPossible[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.total}`);
+                notPossibleOps.push({ planet: row.planet, operation: row.operation });
+            } else if (Number(row.owned) < Number(row.totalAllZones)) {
+                if (!notAllPossible[`${row.planet} ${row.operation}`]) {
+                    notAllPossible[`${row.planet} ${row.operation}`] = [];
+                }
+                notAllPossible[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.totalAllZones}`);
+            } else if (`${row.owned}` === `${row.total}`) {
+                if (!exactlyPossibleOneOp[`${row.planet} ${row.operation}`]) {
+                    exactlyPossibleOneOp[`${row.planet} ${row.operation}`] = [];
+                }
+                exactlyPossibleOneOp[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.total}`);
+            } else if (`${row.owned}` === `${row.totalAllZones}`) {
+                if (!exactlyPossibleSeveralOps[`${row.planet} ${row.operation}`]) {
+                    exactlyPossibleSeveralOps[`${row.planet} ${row.operation}`] = [];
+                }
+                exactlyPossibleSeveralOps[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.totalAllZones}`);
+            }
+        }
+        const unitsToRemove = {} as any;
+        for (const notPossibleOp of notPossibleOps) {
+            for (let i = resultCopy.length - 1; i >= 0; i--) {
+                const row = resultCopy[i];
+                if (!operations[row.planet][row.operation]) {
+                    continue;
+                }
+                if (notPossibleOp.planet === row.planet && notPossibleOp.operation === row.operation) {
+                    if (!unitsToRemove[row.name]) {
+                        unitsToRemove[row.name] = 0;
+                    }
+                    unitsToRemove[row.name] += Number(row.total);
+                    resultCopy.splice(i, 1);
+                }
+            }
+        }
+        for (const unit of Object.keys(unitsToRemove)) {
+            for (const row of resultCopy) {
+                if (!operations[row.planet][row.operation]) {
+                    continue;
+                }
+                if (row.name === unit) {
+                    row.totalAllZones = Number(row.totalAllZones) - unitsToRemove[unit];
+                }
+            }
+        }
+        for (const row of resultCopy) {
+            if (!operations[row.planet][row.operation]) {
+                continue;
+            }
+            if (Number(row.owned) < Number(row.totalAllZones)) {
+                if (!notAllPossibleAutoRemoved[`${row.planet} ${row.operation}`]) {
+                    notAllPossibleAutoRemoved[`${row.planet} ${row.operation}`] = [];
+                }
+                notAllPossibleAutoRemoved[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.totalAllZones}`);
+            } else if (`${row.owned}` === `${row.totalAllZones}`) {
+                if (!exactlyPossibleSeveralOpsAutoRemoved[`${row.planet} ${row.operation}`]) {
+                    exactlyPossibleSeveralOpsAutoRemoved[`${row.planet} ${row.operation}`] = [];
+                }
+                exactlyPossibleSeveralOpsAutoRemoved[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.totalAllZones}`);
+            }
+        }
+        if (!Object.keys(notPossible).length && !Object.keys(notPossible).length
+                && !Object.keys(notPossible).length && !Object.keys(notPossible).length
+                && !Object.keys(notPossible).length &&!Object.keys(notPossible).length) {
+            return undefined;
+        }
+        return (
+            <div style={{ marginTop: 10, marginBottom: 10, whiteSpace: 'pre-wrap' }}>
+                <p style={{ fontWeight: 'bold' }}>Not possible:</p>
+                <p>{formatReportObject(notPossible)}</p>
+                <p style={{ fontWeight: 'bold' }}>Not all possible (still counting units from not possible operations):</p>
+                <p>{formatReportObject(notAllPossible)}</p>
+                <p style={{ fontWeight: 'bold' }}>Not all possible (assuming no units put to not possible operations):</p>
+                <p>{formatReportObject(notAllPossibleAutoRemoved)}</p>
+                <p style={{ fontWeight: 'bold' }}>Exactly possible (considering one operation):</p>
+                <p>{formatReportObject(exactlyPossibleOneOp)}</p>
+                <p style={{ fontWeight: 'bold' }}>Exactly possible (considering all operations, still counting units from not possible operations):</p>
+                <p>{formatReportObject(exactlyPossibleSeveralOps)}</p>
+                <p style={{ fontWeight: 'bold' }}>Exactly possible (considering all operations, assuming no units put to not possible operations):</p>
+                <p>{formatReportObject(exactlyPossibleSeveralOpsAutoRemoved)}</p>
+            </div>
+        );
+    };
+
     return (
         <div style={{ position: 'relative', marginBottom: 300 }}>
             <button onClick={update} disabled={loading} style={{ margin: 8 }}>Fetch data</button>
@@ -190,6 +303,7 @@ function Component2() {
                     ))}
                 </tbody>
             </table>
+            {report && report}
             {result && (
                 <table id="resultTable">
                     <thead>
