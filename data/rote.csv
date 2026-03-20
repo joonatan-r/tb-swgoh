@@ -45,7 +45,7 @@ LS,1,Coruscant,4,1,3,General Kenobi,GENERALKENOBI
 LS,1,Coruscant,4,1,4,Lobot,LOBOT
 LS,1,Coruscant,4,1,5,Han Solo,HANSOLO
 LS,1,Coruscant,3,3,1,Jedi Knight Luke Skywalker,JEDIKNIGHTLUKE
-LS,1,Coruscant,3,3,2,PadmÃ© Amidala,PADMEAMIDALA
+LS,1,Coruscant,3,3,2,Padmé Amidala,PADMEAMIDALA
 LS,1,Coruscant,3,3,3,C-3PO,C3POLEGENDARY
 LS,1,Coruscant,3,3,4,Sana Starros,SANASTARROS
 LS,1,Coruscant,3,3,5,The Armorer,ARMORER
@@ -92,7 +92,7 @@ LS,1,Coruscant,1,1,5,Hermit Yoda,HERMITYODA
 LS,2,Bracca,6,3,1,Rey,GLREY
 LS,2,Bracca,6,3,2,Ben Solo,BENSOLO
 LS,2,Bracca,6,3,3,Razor Crest,RAZORCREST
-LS,2,Bracca,6,3,4,PadmÃ© Amidala,PADMEAMIDALA
+LS,2,Bracca,6,3,4,Padmé Amidala,PADMEAMIDALA
 LS,2,Bracca,6,3,5,Teebo,TEEBO
 LS,2,Bracca,6,2,1,Vandor Chewbacca,YOUNGCHEWBACCA
 LS,2,Bracca,6,2,2,Razor Crest,RAZORCREST
@@ -180,7 +180,7 @@ LS,2,Bracca,1,1,3,Wedge Antilles,WEDGEANTILLES
 LS,2,Bracca,1,1,4,L3-37,L3_37
 LS,2,Bracca,1,1,5,Ghost,GHOST
 LS,3,Kashyyyk,6,3,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
-LS,3,Kashyyyk,6,3,2,PadmÃ© Amidala,PADMEAMIDALA
+LS,3,Kashyyyk,6,3,2,Padmé Amidala,PADMEAMIDALA
 LS,3,Kashyyyk,6,3,3,Ben Solo,BENSOLO
 LS,3,Kashyyyk,6,3,4,Ewok Scout,EWOKSCOUT
 LS,3,Kashyyyk,6,3,5,Hoth Rebel Soldier,HOTHREBELSOLDIER
@@ -202,7 +202,7 @@ LS,3,Kashyyyk,5,3,5,K-2SO,K2SO
 LS,3,Kashyyyk,5,2,1,Rey,GLREY
 LS,3,Kashyyyk,5,2,2,Greef Karga,GREEFKARGA
 LS,3,Kashyyyk,5,2,3,Commander Ahsoka Tano,COMMANDERAHSOKA
-LS,3,Kashyyyk,5,2,4,PadmÃ© Amidala,PADMEAMIDALA
+LS,3,Kashyyyk,5,2,4,Padmé Amidala,PADMEAMIDALA
 LS,3,Kashyyyk,5,2,5,Commander Luke Skywalker,COMMANDERLUKESKYWALKER
 LS,3,Kashyyyk,5,1,1,Ben Solo,BENSOLO
 LS,3,Kashyyyk,5,1,2,C-3PO,C3POLEGENDARY
@@ -260,7 +260,7 @@ LS,3,Kashyyyk,1,3,3,Hermit Yoda,HERMITYODA
 LS,3,Kashyyyk,1,3,4,Razor Crest,RAZORCREST
 LS,3,Kashyyyk,1,3,5,Jedi Knight Anakin,ANAKINKNIGHT
 LS,3,Kashyyyk,1,2,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
-LS,3,Kashyyyk,1,2,2,PadmÃ© Amidala,PADMEAMIDALA
+LS,3,Kashyyyk,1,2,2,Padmé Amidala,PADMEAMIDALA
 LS,3,Kashyyyk,1,2,3,Hermit Yoda,HERMITYODA
 LS,3,Kashyyyk,1,2,4,Razor Crest,RAZORCREST
 LS,3,Kashyyyk,1,2,5,C-3PO,C3POLEGENDARY
@@ -283,7 +283,7 @@ LS,4,Lothal,6,1,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
 LS,4,Lothal,6,1,2,Rebel Officer Leia Organa,HOTHLEIA
 LS,4,Lothal,6,1,3,Wedge Antilles's X-wing,XWINGRED2
 LS,4,Lothal,6,1,4,Sana Starros,SANASTARROS
-LS,4,Lothal,6,1,5,PadmÃ© Amidala,PADMEAMIDALA
+LS,4,Lothal,6,1,5,Padmé Amidala,PADMEAMIDALA
 LS,4,Lothal,5,3,1,Profundity,CAPITALPROFUNDITY
 LS,4,Lothal,5,3,2,Logray,LOGRAY
 LS,4,Lothal,5,3,3,Bistan,BISTAN
@@ -297,7 +297,7 @@ LS,4,Lothal,5,2,5,Razor Crest,RAZORCREST
 LS,4,Lothal,5,1,1,Jedi Master Kenobi,JEDIMASTERKENOBI
 LS,4,Lothal,5,1,2,Han Solo,HANSOLO
 LS,4,Lothal,5,1,3,Tech,BADBATCHTECH
-LS,4,Lothal,5,1,4,PadmÃ© Amidala,PADMEAMIDALA
+LS,4,Lothal,5,1,4,Padmé Amidala,PADMEAMIDALA
 LS,4,Lothal,5,1,5,Jedi Knight Revan,JEDIKNIGHTREVAN
 LS,4,Lothal,4,3,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
 LS,4,Lothal,4,3,2,Rebel Officer Leia Organa,HOTHLEIA
@@ -373,7 +373,7 @@ LS,5,Ring of Kafrene,6,1,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
 LS,5,Ring of Kafrene,6,1,2,Jedi Knight Luke Skywalker,JEDIKNIGHTLUKE
 LS,5,Ring of Kafrene,6,1,3,Omega,BADBATCHOMEGA
 LS,5,Ring of Kafrene,6,1,4,Ima-Gun Di,IMAGUNDI
-LS,5,Ring of Kafrene,6,1,5,Chirrut ÃŽmwe,CHIRRUTIMWE
+LS,5,Ring of Kafrene,6,1,5,Chirrut Îmwe,CHIRRUTIMWE
 LS,5,Ring of Kafrene,5,3,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
 LS,5,Ring of Kafrene,5,3,2,Jedi Knight Luke Skywalker,JEDIKNIGHTLUKE
 LS,5,Ring of Kafrene,5,3,3,Hoth Rebel Soldier,HOTHREBELSOLDIER
@@ -430,7 +430,7 @@ LS,5,Ring of Kafrene,2,2,3,General Skywalker,GENERALSKYWALKER
 LS,5,Ring of Kafrene,2,2,4,Han's Millennium Falcon,MILLENNIUMFALCON
 LS,5,Ring of Kafrene,2,2,5,"CT-7567 ""Rex""",CT7567
 LS,5,Ring of Kafrene,2,1,1,Rey,GLREY
-LS,5,Ring of Kafrene,2,1,2,PadmÃ© Amidala,PADMEAMIDALA
+LS,5,Ring of Kafrene,2,1,2,Padmé Amidala,PADMEAMIDALA
 LS,5,Ring of Kafrene,2,1,3,Jedi Knight Luke Skywalker,JEDIKNIGHTLUKE
 LS,5,Ring of Kafrene,2,1,4,Grand Master Yoda,GRANDMASTERYODA
 LS,5,Ring of Kafrene,2,1,5,Lobot,LOBOT
@@ -507,7 +507,7 @@ LS,6,Scarif,3,2,5,Dash Rendar,DASHRENDAR
 LS,6,Scarif,3,1,1,Rey,GLREY
 LS,6,Scarif,3,1,2,Rebel Officer Leia Organa,HOTHLEIA
 LS,6,Scarif,3,1,3,Ben Solo,BENSOLO
-LS,6,Scarif,3,1,4,PadmÃ© Amidala,PADMEAMIDALA
+LS,6,Scarif,3,1,4,Padmé Amidala,PADMEAMIDALA
 LS,6,Scarif,3,1,5,Bastila Shan,BASTILASHAN
 LS,6,Scarif,2,3,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
 LS,6,Scarif,2,3,2,Razor Crest,RAZORCREST
@@ -595,7 +595,7 @@ Mix,1,Corellia,3,2,3,Darth Revan,DARTHREVAN
 Mix,1,Corellia,3,2,4,Paploo,PAPLOO
 Mix,1,Corellia,3,2,5,Bossk,BOSSK
 Mix,1,Corellia,3,1,1,TIE/IN Interceptor Prototype,TIEINTERCEPTOR
-Mix,1,Corellia,3,1,2,PadmÃ© Amidala,PADMEAMIDALA
+Mix,1,Corellia,3,1,2,Padmé Amidala,PADMEAMIDALA
 Mix,1,Corellia,3,1,3,Grand Master Yoda,GRANDMASTERYODA
 Mix,1,Corellia,3,1,4,Ghost,GHOST
 Mix,1,Corellia,3,1,5,Wat Tambor,WATTAMBOR
@@ -803,7 +803,7 @@ Mix,3,Tatooine,1,2,1,Rey,GLREY
 Mix,3,Tatooine,1,2,2,Commander Ahsoka Tano,COMMANDERAHSOKA
 Mix,3,Tatooine,1,2,3,Darth Malgus,DARTHMALGUS
 Mix,3,Tatooine,1,2,4,Geonosian Spy,GEONOSIANSPY
-Mix,3,Tatooine,1,2,5,Chirrut ÃŽmwe,CHIRRUTIMWE
+Mix,3,Tatooine,1,2,5,Chirrut Îmwe,CHIRRUTIMWE
 Mix,3,Tatooine,1,1,1,TIE/IN Interceptor Prototype,TIEINTERCEPTOR
 Mix,3,Tatooine,1,1,2,Razor Crest,RAZORCREST
 Mix,3,Tatooine,1,1,3,"Boba Fett, Scion of Jango",BOBAFETTSCION
@@ -933,7 +933,7 @@ Mix,5,Vandor,4,3,1,Supreme Leader Kylo Ren,SUPREMELEADERKYLOREN
 Mix,5,Vandor,4,3,2,Razor Crest,RAZORCREST
 Mix,5,Vandor,4,3,3,Grand Inquisitor,GRANDINQUISITOR
 Mix,5,Vandor,4,3,4,Jedi Consular's Starfighter,JEDISTARFIGHTERCONSULAR
-Mix,5,Vandor,4,3,5,PadmÃ© Amidala,PADMEAMIDALA
+Mix,5,Vandor,4,3,5,Padmé Amidala,PADMEAMIDALA
 Mix,5,Vandor,4,2,1,Profundity,CAPITALPROFUNDITY
 Mix,5,Vandor,4,2,2,Scythe,SCYTHE
 Mix,5,Vandor,4,2,3,Jedi Knight Luke Skywalker,JEDIKNIGHTLUKE
@@ -1625,9 +1625,9 @@ LS,3,Zeffo,6,3,3,Ki-Adi-Mundi,KIADIMUNDI
 LS,3,Zeffo,6,3,4,Jedi Knight Guardian,JEDIKNIGHTGUARDIAN
 LS,3,Zeffo,6,3,5,Visas Marr,VISASMARR
 LS,3,Zeffo,6,2,1,Jedi Master Kenobi,JEDIMASTERKENOBI
-LS,3,Zeffo,6,2,2,PadmÃ© Amidala,PADMEAMIDALA
+LS,3,Zeffo,6,2,2,Padmé Amidala,PADMEAMIDALA
 LS,3,Zeffo,6,2,3,Commander Luke Skywalker,COMMANDERLUKESKYWALKER
-LS,3,Zeffo,6,2,4,Chirrut ÃŽmwe,CHIRRUTIMWE
+LS,3,Zeffo,6,2,4,Chirrut Îmwe,CHIRRUTIMWE
 LS,3,Zeffo,6,2,5,Jolee Bindo,JOLEEBINDO
 LS,3,Zeffo,6,1,1,Razor Crest,RAZORCREST
 LS,3,Zeffo,6,1,2,Jedi Knight Luke Skywalker,JEDIKNIGHTLUKE
@@ -1702,7 +1702,7 @@ LS,3,Zeffo,1,3,5,MG-100 StarFortress SF-17,MG100STARFORTRESSSF17
 LS,3,Zeffo,1,2,1,Jedi Master Luke Skywalker,GRANDMASTERLUKE
 LS,3,Zeffo,1,2,2,BB-8,BB8
 LS,3,Zeffo,1,2,3,Han Solo,HANSOLO
-LS,3,Zeffo,1,2,4,Chirrut ÃŽmwe,CHIRRUTIMWE
+LS,3,Zeffo,1,2,4,Chirrut Îmwe,CHIRRUTIMWE
 LS,3,Zeffo,1,2,5,Jolee Bindo,JOLEEBINDO
 LS,3,Zeffo,1,1,1,Commander Ahsoka Tano,COMMANDERAHSOKA
 LS,3,Zeffo,1,1,2,Jedi Knight Luke Skywalker,JEDIKNIGHTLUKE
