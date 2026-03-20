@@ -9,7 +9,7 @@ const getRelicForPlanet = (planet: string) => {
     if (['Geonosis', 'Felucia', 'Bracca'].includes(planet)) {
         return 6;
     }
-    if (['Dathomir', 'Tatooine', 'Zeffo', 'Kashyyk'].includes(planet)) {
+    if (['Dathomir', 'Tatooine', 'Zeffo', 'Kashyyyk'].includes(planet)) {
         return 7;
     }
     if (['Haven-class Medical Station', 'Mandalore', 'Kessel', 'Lothal'].includes(planet)) {
@@ -18,6 +18,24 @@ const getRelicForPlanet = (planet: string) => {
     if (['Malachor', 'Vandor', 'Ring of Kafrene', 'Death Star', 'Hoth', 'Scarif'].includes(planet)) {
         return 9;
     }
+};
+
+const getTotalNeededInAllZones = (data: any, operations: any) => {
+    const totalInAllZonesByUnit: any = {};
+    for (const planet of Object.keys(data)) {
+        for (const operation of Object.keys(data[planet])) {
+            if (!operations[planet][operation]) {
+                continue;
+            }
+            for (const name of Object.keys(data[planet][operation])) {
+                if (!totalInAllZonesByUnit[name]) {
+                    totalInAllZonesByUnit[name] = 0;
+                }
+                totalInAllZonesByUnit[name] += data[planet][operation][name].total;
+            }
+        }
+    }
+    return totalInAllZonesByUnit;
 };
 
 const operationsBase = {
@@ -52,7 +70,7 @@ function Component2() {
         Dathomir: { ...operationsBase },
         Tatooine: { ...operationsBase },
         Zeffo: { ...operationsBase },
-        Kashyyk: { ...operationsBase },
+        Kashyyyk: { ...operationsBase },
         'Haven-class Medical Station': { ...operationsBase },
         Mandalore: { ...operationsBase },
         Kessel: { ...operationsBase },
@@ -89,11 +107,10 @@ function Component2() {
             });
     };
 
-    // TODO: select planets + maybe operations to consider, list total of unit required across those
-
     const check = async () => {
         const data = await api.invoke('get-data');
         const tableRows = [];
+        const totalInAllZonesByUnit: any = getTotalNeededInAllZones(data, operations);
         for (const planet of Object.keys(data)) {
             for (const operation of Object.keys(data[planet])) {
                 for (const name of Object.keys(data[planet][operation])) {
@@ -111,13 +128,13 @@ function Component2() {
                         operation,
                         name,
                         total: data[planet][operation][name].total,
+                        totalAllZones: totalInAllZonesByUnit[name] ?? 0,
                         owned: `${owned.length}`,
-                        owningPlayers: `${owned.length ? `(${owned.join(', ')})` : ''}`
+                        owningPlayers: `${owned.length ? `${owned.join(', ')}` : ''}`
                     });
                 }
             }
         }
-        console.log(data);
         setResult(tableRows);
     };
 
@@ -181,18 +198,20 @@ function Component2() {
                             <th>Operation</th>
                             <th>Unit</th>
                             <th>Needed</th>
+                            <th>All zones</th>
                             <th>Owned</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {result.map((r, i) => (
+                        {result.map((r, i) => (operations[r.planet]?.[r.operation]) && (
                             <tr className={ r.planet !== result[i - 1]?.planet ? 'firstRow' : '' }>
                                 <td>{r.planet}</td>
                                 <td>{r.operation}</td>
                                 <td>{r.name}</td>
                                 <td>{r.total}</td>
+                                <td>{r.totalAllZones}</td>
                                 <td
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: 'help' }}
                                     onMouseEnter={e => setTooltip({
                                         x: e.pageX,
                                         y: e.pageY,
@@ -212,7 +231,8 @@ function Component2() {
                     style={{
                         position: 'absolute',
                         background: 'white',
-                        margin: 10,
+                        border: '1px solid gray',
+                        padding: 10,
                         top: `${tooltip.y + 10}px`,
                         left: `${tooltip.x + 10}px`
                     }}

@@ -27,6 +27,11 @@ body {
     padding: 8px;
 }
 
+#resultTable th {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
 #resultTable .firstRow {
     border-top: 1px solid black;
 }
