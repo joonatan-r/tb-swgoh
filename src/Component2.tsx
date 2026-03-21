@@ -143,8 +143,16 @@ function Component2() {
         setReport(getUpdatedReport());
     }, [result]);
 
-    const formatReportObject = (obj: any) => {
-        return Object.keys(obj).map(key => `${key} (${obj[key].join(', ')})`).join(',\n') + '\n';
+    const formatReportObject = (obj: any, hideIfOnlyOne?: boolean) => {
+        const objKeys = Object.keys(obj);
+        if (!objKeys.length) {
+            return '-\n';
+        }
+        if (hideIfOnlyOne && objKeys.length === 1) {
+            console.log(`hid the only ${objKeys[0]} from "not all possible" report`);
+            return '-\n';
+        }
+        return objKeys.map(key => `${key} (${obj[key].join(', ')})`).join(',\n') + '\n';
     };
 
     const getUpdatedReport = (): any => {
@@ -157,6 +165,7 @@ function Component2() {
         const exactlyPossibleOneOp = {} as any;
         const exactlyPossibleSeveralOps = {} as any;
         const exactlyPossibleSeveralOpsAutoRemoved = {} as any;
+        const possibleWithLeftOver = [] as any[];
         const notPossibleOps = [] as any[];
         const resultCopy = JSON.parse(JSON.stringify(result)) as any[]; // lazy way to copy
         for (const row of result) {
@@ -169,17 +178,20 @@ function Component2() {
                 }
                 notPossible[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.total}`);
                 notPossibleOps.push({ planet: row.planet, operation: row.operation });
-            } else if (Number(row.owned) < Number(row.totalAllZones)) {
+            }
+            if (Number(row.owned) < Number(row.totalAllZones)) {
                 if (!notAllPossible[`${row.planet} ${row.operation}`]) {
                     notAllPossible[`${row.planet} ${row.operation}`] = [];
                 }
                 notAllPossible[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.totalAllZones}`);
-            } else if (`${row.owned}` === `${row.total}`) {
+            }
+            if (`${row.owned}` === `${row.total}`) {
                 if (!exactlyPossibleOneOp[`${row.planet} ${row.operation}`]) {
                     exactlyPossibleOneOp[`${row.planet} ${row.operation}`] = [];
                 }
                 exactlyPossibleOneOp[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.total}`);
-            } else if (`${row.owned}` === `${row.totalAllZones}`) {
+            }
+            if (`${row.owned}` === `${row.totalAllZones}`) {
                 if (!exactlyPossibleSeveralOps[`${row.planet} ${row.operation}`]) {
                     exactlyPossibleSeveralOps[`${row.planet} ${row.operation}`] = [];
                 }
@@ -228,25 +240,64 @@ function Component2() {
                 exactlyPossibleSeveralOpsAutoRemoved[`${row.planet} ${row.operation}`].push(`${row.name} ${row.owned}/${row.totalAllZones}`);
             }
         }
-        if (!Object.keys(notPossible).length && !Object.keys(notPossible).length
-                && !Object.keys(notPossible).length && !Object.keys(notPossible).length
-                && !Object.keys(notPossible).length &&!Object.keys(notPossible).length) {
-            return undefined;
+        for (const row of result) {
+            if (!operations[row.planet][row.operation]
+                || possibleWithLeftOver.includes(`${row.planet} ${row.operation}`)
+            ) {
+                continue;
+            }
+            let notInOtherReports = true;
+            for (const reportObject of [
+                notPossible,
+                notAllPossible,
+                notAllPossibleAutoRemoved,
+                exactlyPossibleOneOp,
+                exactlyPossibleSeveralOps,
+                exactlyPossibleSeveralOpsAutoRemoved
+            ]) {
+                if (Object.keys(reportObject).includes(`${row.planet} ${row.operation}`)) {
+                    notInOtherReports = false;
+                    break;
+                }
+            }
+            if (notInOtherReports) {
+                possibleWithLeftOver.push(`${row.planet} ${row.operation}`);
+            }
+        }
+        for (const notPossibleOp of notPossibleOps) {
+            let hidden = false;
+            for (const reportObject of [
+                notAllPossible,
+                notAllPossibleAutoRemoved,
+                exactlyPossibleOneOp,
+                exactlyPossibleSeveralOps,
+                exactlyPossibleSeveralOpsAutoRemoved
+            ]) {
+                if (reportObject[`${notPossibleOp.planet} ${notPossibleOp.operation}`]) {
+                    delete reportObject[`${notPossibleOp.planet} ${notPossibleOp.operation}`];
+                    hidden = true;
+                }
+            }
+            if (hidden) {
+                console.log(`hid not possible ${notPossibleOp.planet} ${notPossibleOp.operation} from other reports`);
+            }
         }
         return (
             <div style={{ marginTop: 10, marginBottom: 10, whiteSpace: 'pre-wrap' }}>
                 <p style={{ fontWeight: 'bold' }}>Not possible:</p>
                 <p>{formatReportObject(notPossible)}</p>
                 <p style={{ fontWeight: 'bold' }}>Not all possible (still counting units from not possible operations):</p>
-                <p>{formatReportObject(notAllPossible)}</p>
+                <p>{formatReportObject(notAllPossible, true)}</p>
                 <p style={{ fontWeight: 'bold' }}>Not all possible (assuming no units put to not possible operations):</p>
-                <p>{formatReportObject(notAllPossibleAutoRemoved)}</p>
+                <p>{formatReportObject(notAllPossibleAutoRemoved, true)}</p>
                 <p style={{ fontWeight: 'bold' }}>Exactly possible (considering one operation):</p>
                 <p>{formatReportObject(exactlyPossibleOneOp)}</p>
                 <p style={{ fontWeight: 'bold' }}>Exactly possible (considering all operations, still counting units from not possible operations):</p>
                 <p>{formatReportObject(exactlyPossibleSeveralOps)}</p>
                 <p style={{ fontWeight: 'bold' }}>Exactly possible (considering all operations, assuming no units put to not possible operations):</p>
                 <p>{formatReportObject(exactlyPossibleSeveralOpsAutoRemoved)}</p>
+                <p style={{ fontWeight: 'bold' }}>Possible with left over:</p>
+                <p>{possibleWithLeftOver.length ? possibleWithLeftOver.join(',\n') : '-\n'}</p>
             </div>
         );
     };
