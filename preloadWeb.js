@@ -1,10 +1,11 @@
 
-const { contextBridge, ipcRenderer } = require('electron');
+const { ipcRenderer } = require('electron');
 
 let ready = false;
 let lastHandledMsgId = null;
 
-setInterval(() => {
+(function handle() {
+    setTimeout(handle, 10000);
     if (!ready) {
         ready = document.querySelector('[class^="titleWrapper"]')?.firstChild?.innerHTML?.endsWith('requests');
         if (!ready) {
@@ -28,36 +29,4 @@ setInterval(() => {
         }
         lastHandledMsgId = lastMsg.id;
     }
-}, 10000);
-
-const channels = ['msg-request'];
-const callBacksForEvent = {};
-
-contextBridge.exposeInMainWorld(
-    "api", {
-        invoke: (channel, ...data) => {
-            if (channels.includes(channel)) {
-                return ipcRenderer.invoke(channel, ...data);
-            }
-        },
-        on: (event, callback, clearOnEnd) => {
-            if (events.includes(event)) {
-                if (clearOnEnd) {
-                    if (!callBacksForEvent[event]) callBacksForEvent[event] = [];
-                    callBacksForEvent[event].push(callback);
-                }
-                return ipcRenderer.on(event, callback); 
-            }
-        },
-        once: (event, callback) => {
-            if (events.includes(event)) {
-                return ipcRenderer.once(event, callback);
-            }
-        },
-        off: (event, callback) => {
-            if (events.includes(event)) {
-                return ipcRenderer.off(event, callback);
-            }
-        }
-    }
-);
+})();
