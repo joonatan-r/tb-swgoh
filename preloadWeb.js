@@ -2,16 +2,10 @@
 const { ipcRenderer } = require('electron');
 
 let ready = false;
+let msgContainer = null;
 let lastHandledMsgId = null;
 
-(function handle() {
-    setTimeout(handle, 10000);
-    if (!ready) {
-        ready = document.querySelector('[class^="titleWrapper"]')?.firstChild?.innerHTML?.endsWith('requests');
-        if (!ready) {
-            return;
-        }
-    }
+const checkMsgs = () => {
     const msgs = document.querySelectorAll('[id^="chat-messages"]');
     const lastMsg = msgs[msgs.length - 1];
     if (lastHandledMsgId === null && lastMsg) {
@@ -29,4 +23,20 @@ let lastHandledMsgId = null;
         }
         lastHandledMsgId = lastMsg.id;
     }
+};
+
+(function handle() {
+    if (!ready) {
+        ready = document.querySelector('[class^="titleWrapper"]')?.firstChild?.innerHTML?.endsWith('requests');
+        msgContainer = document.querySelector('[data-list-id^="chat-messages"]');
+        ready = ready && msgContainer !== null;
+        if (!ready) {
+            setTimeout(handle, 1000);
+            return;
+        }
+    }
+    checkMsgs();
+    new MutationObserver(
+        (mutations) => mutations.forEach(mutation => mutation.type === 'childList' && checkMsgs())
+    ).observe(msgContainer, { attributes: false, childList: true, subtree: true });
 })();
