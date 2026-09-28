@@ -285,6 +285,25 @@ function getOpsFromRequest(request, operations) {
 
 const send = (str) => {
     console.log(str)
+    const chunk = (str, size) => {
+        return [].concat.apply(
+            [],
+            str.split('').map((x, i) => i % size ? [] : str.slice(i, i + size))
+        );
+    };
+    const chunks = chunk(str, 1993);
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    chunks.forEach(content => {
+        fetch(
+            'test',
+            {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ content }),
+            },
+        );
+    });
 };
 
 const calculate = async (request, guildUrl, data) => {
