@@ -19,6 +19,24 @@ const createWindow = () => {
     // win.webContents.openDevTools();
 };
 
+let dataWindow = undefined;
+
+const createWebDataWindow = (url) => {
+    if (!dataWindow) {
+      dataWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        show: false,
+        webPreferences: {
+          preload: path.join(__dirname, 'preloadWebSend.js')
+        }
+      });
+      dataWindow.show();
+    }
+    dataWindow.loadURL(url);
+    dataWindow.minimize();
+};
+
 app.whenReady().then(() => {
     createWindow();
   
@@ -80,16 +98,34 @@ try {
   console.error(e);
 }
 
+let dataResolve = () => null;
+let dataPromise = new Promise(r => { dataResolve = r; });
+
 ipcMain.handle('get-player-urls-and-names', async () => {
-  return await fetch('https://swgoh.gg' + config?.guildUrl).then(r => r.text()).then(getPlayerUrlsAndNames);
+  createWebDataWindow('https://swgoh.gg' + config?.guildUrl);
+  const content = await dataPromise;
+  dataPromise = new Promise(r => { dataResolve = r; });
+  // dataWindow?.close();
+  return getPlayerUrlsAndNames(content);
+  // return await fetch('https://swgoh.gg' + config?.guildUrl).then(r => r.text()).then(getPlayerUrlsAndNames);
 });
 
 ipcMain.handle('get-relic-characters', async (event, url) => {
-  return await fetch('https://swgoh.gg' + url).then(r => r.text()).then(getRelicCharacters);
+  createWebDataWindow('https://swgoh.gg' + url);
+  const content = await dataPromise;
+  dataPromise = new Promise(r => { dataResolve = r; });
+  // dataWindow?.close();
+  return getRelicCharacters(content);
+  // return await fetch('https://swgoh.gg' + url).then(r => r.text()).then(getRelicCharacters);
 });
 
 ipcMain.handle('get-7-start-ships', async (event, url) => {
-  return await fetch('https://swgoh.gg' + url).then(r => r.text()).then(get7StarShips);
+  createWebDataWindow('https://swgoh.gg' + url);
+  const content = await dataPromise;
+  dataPromise = new Promise(r => { dataResolve = r; });
+  // dataWindow?.close();
+  return get7StarShips(content);
+  // return await fetch('https://swgoh.gg' + url).then(r => r.text()).then(get7StarShips);
 });
 
 const csvData = fs.readFileSync('data/rote.tsv', { encoding: 'utf-8' });
@@ -119,4 +155,8 @@ for (const csvRow of csvData.split('\r\n').slice(1)) {
 
 ipcMain.handle('get-data', async (event) => {
   return data;
+});
+
+ipcMain.handle('receive-data', (event, data) => {
+  dataResolve(data);
 });
