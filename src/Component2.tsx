@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const api = (window as any).api;
+(window as any).hideNotPossibleExtraInfo = true;
+(window as any).mergeOneOpIntoAll = true;
 
 const getRelicForPlanet = (planet: string) => {
     if (['Mustafar', 'Corellia', 'Coruscant'].includes(planet)) {
@@ -38,6 +40,20 @@ const getTotalNeededInAllZones = (data: any, operations: any) => {
     return totalInAllZonesByUnit;
 };
 
+const mergeReportObject = (source: any, target: any) => {
+    const sourceKeys = Object.keys(source);
+    for (const sourceKey of sourceKeys) {
+        if (!target[sourceKey]) {
+            target[sourceKey] = [];
+        }
+        for (const entry of source[sourceKey]) {
+            if (!target[sourceKey].includes(entry)) {
+                target[sourceKey].push(entry);
+            }
+        }
+    }
+}
+
 const operationsBase = {
     1: false,
     2: false,
@@ -57,7 +73,7 @@ const operationsAll = {
 };
 
 function Component2() {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState('');
     const [rosters, setRosters] = useState<any[]>([]);
     const [result, setResult] = useState<any[]>();
     const [operations, setOperations] = useState<any>({
@@ -86,10 +102,12 @@ function Component2() {
     const [report, setReport] = useState<any>();
 
     const update = () => {
-        setLoading(true);
+        setLoading('Loading...');
         api.invoke('get-player-urls-and-names').then(async (urlsAndNames: any) => {
                 const relicsAnd7StarShips = [];
+                let i = 0;
                 for (const player of urlsAndNames) {
+                    setLoading(`Loading... (${i++}/${urlsAndNames.length})`);
                     console.log(player);
                     const characters = await api.invoke('get-relic-characters', player.url + 'characters/');
                     const ships = await api.invoke('get-7-start-ships', player.url + 'ships/');
@@ -104,7 +122,7 @@ function Component2() {
             .then((relicsAnd7StarShips: any) => {
                 setRosters(relicsAnd7StarShips);
                 console.log(relicsAnd7StarShips);
-                setLoading(false);
+                setLoading('');
             });
     };
 
@@ -249,10 +267,10 @@ function Component2() {
             let notInOtherReports = true;
             for (const reportObject of [
                 notPossible,
-                notAllPossible,
+                // notAllPossible, // for now still show if in these ones, which still consider not possible ones
                 notAllPossibleAutoRemoved,
                 exactlyPossibleOneOp,
-                exactlyPossibleSeveralOps,
+                // exactlyPossibleSeveralOps,
                 exactlyPossibleSeveralOpsAutoRemoved
             ]) {
                 if (Object.keys(reportObject).includes(`${row.planet} ${row.operation}`)) {
@@ -282,18 +300,23 @@ function Component2() {
                 console.log(`hid not possible ${notPossibleOp.planet} ${notPossibleOp.operation} from other reports`);
             }
         }
+        const hideNotPossible = (window as any).hideNotPossibleExtraInfo;
+        const mergeOneIntoAll = (window as any).mergeOneOpIntoAll;
+        if (mergeOneIntoAll) {
+            mergeReportObject(exactlyPossibleOneOp, exactlyPossibleSeveralOpsAutoRemoved);
+        }
         return (
             <div style={{ marginTop: 10, marginBottom: 10, whiteSpace: 'pre-wrap' }}>
                 <p style={{ fontWeight: 'bold' }}>Not possible:</p>
                 <p>{formatReportObject(notPossible)}</p>
-                <p style={{ fontWeight: 'bold' }}>Not all possible (still counting units from not possible operations):</p>
-                <p>{formatReportObject(notAllPossible, true)}</p>
+                {!hideNotPossible && (<p style={{ fontWeight: 'bold' }}>Not all possible (still counting units from not possible operations):</p>)}
+                {!hideNotPossible && (<p>{formatReportObject(notAllPossible, true)}</p>)}
                 <p style={{ fontWeight: 'bold' }}>Not all possible (assuming no units put to not possible operations):</p>
                 <p>{formatReportObject(notAllPossibleAutoRemoved, true)}</p>
-                <p style={{ fontWeight: 'bold' }}>Exactly possible (considering one operation):</p>
-                <p>{formatReportObject(exactlyPossibleOneOp)}</p>
-                <p style={{ fontWeight: 'bold' }}>Exactly possible (considering all operations, still counting units from not possible operations):</p>
-                <p>{formatReportObject(exactlyPossibleSeveralOps)}</p>
+                {!mergeOneIntoAll && (<p style={{ fontWeight: 'bold' }}>Exactly possible (considering one operation):</p>)}
+                {!mergeOneIntoAll && (<p>{formatReportObject(exactlyPossibleOneOp)}</p>)}
+                {!hideNotPossible && (<p style={{ fontWeight: 'bold' }}>Exactly possible (considering all operations, still counting units from not possible operations):</p>)}
+                {!hideNotPossible && (<p>{formatReportObject(exactlyPossibleSeveralOps)}</p>)}
                 <p style={{ fontWeight: 'bold' }}>Exactly possible (considering all operations, assuming no units put to not possible operations):</p>
                 <p>{formatReportObject(exactlyPossibleSeveralOpsAutoRemoved)}</p>
                 <p style={{ fontWeight: 'bold' }}>Possible with left over:</p>
@@ -304,9 +327,9 @@ function Component2() {
 
     return (
         <div style={{ position: 'relative', marginBottom: 300 }}>
-            <button onClick={update} disabled={loading} style={{ margin: 8 }}>Fetch data</button>
-            <button onClick={check} disabled={loading} style={{ margin: 8 }}>Calculate</button>
-            {loading && (<span>Loading...</span>)}
+            <button onClick={update} disabled={!!loading} style={{ margin: 8 }}>Fetch data</button>
+            <button onClick={check} disabled={!!loading || !rosters?.length} style={{ margin: 8 }}>Calculate</button>
+            {loading && (<span>{loading}</span>)}
             <table id="checkboxTable">
                 <thead>
                     <tr>

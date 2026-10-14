@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "build": "webpack",
+    "package": "npx @electron/packager --overwrite . rotecalculator",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
