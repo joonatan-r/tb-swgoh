@@ -100,6 +100,8 @@ function Component2() {
     });
     const [tooltip, setTooltip] = useState<any>();
     const [report, setReport] = useState<any>();
+    const [cancelling, setCancelling] = useState(false);
+    const cancelRef = useRef(false);
 
     const update = () => {
         setLoading('Loading...');
@@ -107,6 +109,11 @@ function Component2() {
                 const relicsAnd7StarShips = [];
                 let i = 0;
                 for (const player of urlsAndNames) {
+                    if (cancelRef.current) {
+                        cancelRef.current = false;
+                        setCancelling(false);
+                        return undefined;
+                    }
                     setLoading(`Loading... (${i++}/${urlsAndNames.length})`);
                     console.log(player);
                     const characters = await api.invoke('get-relic-characters', player.url + 'characters/');
@@ -120,10 +127,17 @@ function Component2() {
                 return relicsAnd7StarShips;
             })
             .then((relicsAnd7StarShips: any) => {
-                setRosters(relicsAnd7StarShips);
-                console.log(relicsAnd7StarShips);
+                if (relicsAnd7StarShips) {
+                    setRosters(relicsAnd7StarShips);
+                    console.log(relicsAnd7StarShips);
+                }
                 setLoading('');
             });
+    };
+
+    const cancel = () => {
+        setCancelling(true);
+        cancelRef.current = true;
     };
 
     const check = async () => {
@@ -327,7 +341,10 @@ function Component2() {
 
     return (
         <div style={{ position: 'relative', marginBottom: 300 }}>
-            <button onClick={update} disabled={!!loading} style={{ margin: 8 }}>Fetch data</button>
+            {loading
+                ? <button onClick={cancel} disabled={cancelling} style={{ margin: 8 }}>Cancel</button>
+                : <button onClick={update} style={{ margin: 8 }}>Fetch data</button>
+            }
             <button onClick={check} disabled={!!loading || !rosters?.length} style={{ margin: 8 }}>Calculate</button>
             {loading && (<span>{loading}</span>)}
             <table id="checkboxTable">

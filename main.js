@@ -3,6 +3,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { decode } = require('html-entities');
 const path = require('node:path');
 const fs = require('fs');
+const { calculate } = require('./calculateNoUI.js');
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -159,4 +160,8 @@ ipcMain.handle('get-data', async (event) => {
 
 ipcMain.handle('receive-data', (event, data) => {
   dataResolve(data);
+});
+
+ipcMain.handle('msg-request', async (event, request) => {
+  calculate(request, config?.guildUrl, data);
 });
