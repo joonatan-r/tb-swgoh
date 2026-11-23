@@ -154,6 +154,7 @@ function Component2() {
                                 r.characters.some((c: any) => c.name === name && Number(c.relic) >= relic)
                                     || r.ships.some((s: any) => s === name)
                             ))
+                            .filter(r => r.player)
                             .map(r => r.player);
                     const owned = data[planet][operation][name].owned;
                     tableRows.push({
